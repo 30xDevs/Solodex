@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solodex</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    #add-button {
+      margin: 10px;
+      padding: 10px;
+      background-color: #86cef7;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <button id="add-button">+</button>
+  <script>
+    const { ipcRenderer } = require('electron');
+    document.getElementById('add-button').addEventListener('click', () => {
+      ipcRenderer.send('open-add-person');
+    });
+  </script>
+</body>
+</html>

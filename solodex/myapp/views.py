@@ -1,9 +1,19 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Person, Description, Relationships, Aspirations
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)  # Generates or retrieves the CSRF token
+    return JsonResponse({"csrfToken": csrf_token})
+
+
+@csrf_exempt
 def add_person(request):
-    """ Add a person to the database when the + button is clicked 
+    """ Add a person to the database when the + button is clicked within the add_person.html page.
     """
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -28,4 +38,4 @@ def add_person(request):
         person.save()
         return JsonResponse({'status': 'success', 'message': 'Person added successfully'})
 
-    return render(request, 'add_person.html')
+    return JsonResponse({'status': 'error', 'message': f'Invalid request method, method was {request.method}'})

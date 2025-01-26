@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from myapp import views # Need this import to get the views with myapp/
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('add_person/', views.add_person, name='add_person'), # endpoint for adding a person
+    path('get-csrf-token/', views.get_csrf_token, name='get-csrf-token'),
 ]
