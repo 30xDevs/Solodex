@@ -1,10 +1,12 @@
-from django.shortcuts import render
+"""
+    Description: Views (which are functions) are the endpoints that are called when a user makes a request to the server.
+"""
+from django.shortcuts import render # pylint: disable=unused-import
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie # pylint: disable=unused-import
 from django.http import JsonResponse
-from .models import Person, Description, Relationships, Aspirations
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-
 from django.middleware.csrf import get_token
-from django.http import JsonResponse
+
+from .models import Person, Description, Relationships, Aspirations
 
 def get_csrf_token(request):
     csrf_token = get_token(request)  # Generates or retrieves the CSRF token
