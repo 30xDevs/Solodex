@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Person</title>
   <script>
+    const { ipcRenderer } = require('electron'); // For opening and closing windows
+
     let csrfToken = null; // Global variable for storing CSRF token, which is used in Django for security
 
     // Function to fetch CSRF token from the server
@@ -52,6 +54,7 @@
 
             if (response.ok) {
               alert("Person added successfully!");
+              // ipcRenderer.send('close-add-person-window'); // Send message to close the window
             } else {
               alert(`Error: ${result.message}`);
             }
@@ -79,16 +82,34 @@
     <input type="text" id="last_name" name="last_name" required><br>
 
     <label for="gender">Gender:</label>
-    <input type="text" id="gender" name="gender" required><br>
+    <select id="gender" name="gender" required>
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+    </select><br>
 
     <label for="description_id">Description ID:</label>
     <input type="text" id="description_id" name="description_id" required><br>
 
-    <label for="relationships_id">Relationships ID:</label>
-    <input type="text" id="relationships_id" name="relationships_id" required><br>
+    <label for="description_text">Description Text:</label>
+    <textarea id="description_text" name="description_text" required></textarea><br>
 
-    <label for="aspirations_id">Aspirations ID:</label>
-    <input type="text" id="aspirations_id" name="aspirations_id" required><br>
+    <label for="physical_characteristics">Physical Characteristics:</label>
+    <textarea id="physical_characteristics" name="physical_characteristics" required></textarea><br>
+
+    <label for="personality_traits">Personality Traits:</label>
+    <input type="text" id="personality_traits" name="personality_traits" required><br>
+
+    <label for="relationship_id">Relationship ID:</label>
+    <input type="text" id="relationship_id" name="relationship_id" required><br>
+
+    <label for="relationship_name">Relationship Name:</label>
+    <input type="text" id="relationship_name" name="relationship_name" required><br>
+
+    <label for="relationship_positivity">Relationship Positivity:</label>
+    <input type="number" id="relationship_positivity" name="relationship_positivity" step="0.01" required><br>
+
+    <label for="aspirations">Aspirations:</label>
+    <input type="text" id="aspirations" name="aspirations" required><br>
 
     <button type="submit">Add Person</button>
   </form>

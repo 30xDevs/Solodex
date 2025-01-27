@@ -82,6 +82,15 @@ function createWindow() {
       }
     });
     addPersonWindow.loadFile('add_person.html'); // Loads the add_person.html pop up
+
+    // Listen for the message to close the add person window
+    ipcMain.on('close-add-person-window', () => {
+      addPersonWindow.close();
+    });
+
+    addPersonWindow.on('closed', () => {
+      ipcMain.removeAllListeners('close-add-person-window');
+    });
   });
 }
 
