@@ -47,3 +47,16 @@ This project is a data collection project on people. As such, there many, many c
 * What if one of the columns in the database was "timestamp" or something similar, using epoch time to avoid timezone-changing nonsense? That way, you could also have an "update entry" button if for example Person A cut their hair shorter, or dyed it, you could make a new row in the database that but have a different hair color noted in the hair color column, but the old entry could still exist. That way, if you made multiple entries about multiple people over time, you could eventually slice by Person A in the visual part of the webapp and see the changes that you've notated over time, and when those changes happened. Perhaps a feature to consider later than alpha_v1.0.0 that we're trying to make quick though. - Mav
 * Ensure that this webapp works on Android phones, but also on as many high profile web browsers as we can, including Safari. That way, Apple users (who might not be able to download this app otherwise) could still go to a website-like thing in Safari and access their data plots and have the ability to add newly met people as well. Perhaps there's a better way to do that than through the browser on the phone, hmmm - Mav
 * Consider the fact that some users might only have 100 rows in their table after a year of using this app. Maybe that's a bad estimation, but my point is that the amount of data being stored is pretty small. What if the webapp users could have the option of saving their database locally to their phone somewhere? That'd make needing to fetch the data from another device somewhere across the internet unnecessary, and perhaps make loading in data to the app and sending it to the 'database' on their phone even faster. Obviously this wouldn't scale for the other projects that we're considering building that could use a similar system to how this project is described in above sections, and if a user was linked with 5 other people, saving all of their data to their own local databases on their phones and having to routinely sync their data with their data-collecting buddies could be annoying, I'm not sure if this is actually that good of an idea. Just a thought. - Mav
+
+# Problems to solve
+- Figure out how to 'sync' to home server
+- How do we build the 'graph'
+  - Multiple different types of links
+
+
+# Contribution
+## Frontend/Client App
+See the [README](./solodex/frontend-tauri/README.md) for the client app.
+
+## Backend
+See the [README](./solodex/README.md) for the backend, particularly the server application.

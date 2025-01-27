@@ -45,7 +45,7 @@ class Person(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    gender = models.BooleanField()
+    gender = models.CharField(max_length=7, null=True)
     description = models.ForeignKey(Description, on_delete=models.CASCADE)
     relationships = models.ForeignKey(Relationships, on_delete=models.CASCADE)
     # age = models.IntegerField()
