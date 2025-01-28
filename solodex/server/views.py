@@ -46,6 +46,7 @@ def add_person(request):
             last_name=last_name,
             gender=gender,
             description=description,
+            # description=Description(text=description),
             aspirations=aspirations
         )
         person.save()

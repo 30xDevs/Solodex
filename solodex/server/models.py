@@ -1,12 +1,12 @@
 """
-    Description: Storing the schema of each of our tables in the DB.
+    Description: Storing the schema of each of our tables in the DB. Any changes to this file will require a migration to be made
+    `python manage.py makemigrations` and `python manage.py migrate`
 """
 
 import uuid
 from django.db import models
 
 # Create your models here.
-
 
 class personalityTraits(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
@@ -17,7 +17,7 @@ class Description(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     text = models.TextField()
     physicalCharacteristics = models.TextField() #TODO: Discuss to detmerine multiple columns
-    personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE)
+    personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.text
