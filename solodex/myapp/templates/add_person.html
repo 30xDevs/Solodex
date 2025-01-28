@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Person</title>
+</head>
+<body>
+    <h1>Add Person</h1>
+    <form id="addPersonForm" method="post" action="{% url 'add_person' %}">
+        {% csrf_token %}
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br>
+
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" name="gender" required><br>
+
+        <label for="description_id">Description ID:</label>
+        <input type="text" id="description_id" name="description_id" required><br>
+
+        <label for="relationships_id">Relationships ID:</label>
+        <input type="text" id="relationships_id" name="relationships_id" required><br>
+
+        <label for="aspirations_id">Aspirations ID:</label>
+        <input type="text" id="aspirations_id" name="aspirations_id" required><br>
+
+        <button type="submit">Add Person</button>
+    </form>
+
+    <script>
+        document.getElementById('addPersonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch("{% url 'add_person' %}", { // This line hits the add_person endpoint which is found in urls.py
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                } else {
+                    alert('Error adding person');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

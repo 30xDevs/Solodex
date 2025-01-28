@@ -2,7 +2,6 @@
     Description: Storing the schema of each of our tables in the DB.
 """
 
-import uuid
 from django.db import models
 
 # Create your models here.
@@ -43,18 +42,18 @@ class Aspirations(models.Model):
     aspiration_drive = None #TODO: Add AspirationDrive model which is a float/integer that represent how mucha person wants this aspiration
 
 class Person(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(max_length=10, primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    gender = models.CharField(max_length=7, null=True)
-    description = models.ForeignKey(Description, on_delete=models.CASCADE, null=True)
-    relationships = models.ForeignKey(Relationships, on_delete=models.CASCADE, null=True)
+    gender = models.BooleanField()
+    description = models.ForeignKey(Description, on_delete=models.CASCADE)
+    relationships = models.ForeignKey(Relationships, on_delete=models.CASCADE)
     # age = models.IntegerField()
     # email = models.EmailField()
     # phone = models.CharField(max_length=15)
     # address = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
-    aspirations = models.ForeignKey(Aspirations, on_delete=models.CASCADE, null=True)
+    aspirations = models.ForeignKey(Aspirations, on_delete=models.CASCADE)
 
 
     def __str__(self):

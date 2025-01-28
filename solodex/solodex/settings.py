@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'server',
-    'rest_framework'
+    'myapp'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'solodex-conf.urls'
+ROOT_URLCONF = 'solodex.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'solodex-conf.wsgi.application'
+WSGI_APPLICATION = 'solodex.wsgi.application'
 
 
 # Database
