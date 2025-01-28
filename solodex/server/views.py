@@ -8,6 +8,9 @@ from django.http import JsonResponse
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import json
 
 def get_csrf_token(request):
     csrf_token = get_token(request)  # Generates or retrieves the CSRF token
@@ -22,6 +25,7 @@ class PersonSerializer(HyperlinkedModelSerializer):
                   'aspirations']
         
 class PersonViewSet(ModelViewSet):
+    """ Allows to create or destory a person object without configuring anything."""
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
 
@@ -30,26 +34,31 @@ def add_person(request):
     """ Add a person to the database when the + button is clicked within the add_person.html page.
     """
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        gender = request.POST.get('gender')
-        description_id = request.POST.get('description_id')
-        relationships_id = request.POST.get('relationships_id')
-        aspirations_id = request.POST.get('aspirations_id')
-
-        description = Description.objects.get(id=description_id)  # pylint: disable=no-member
-        relationships = Relationships.objects.get(id=relationships_id)  # pylint: disable=no-member
-        aspirations = Aspirations.objects.get(id=aspirations_id)  # pylint: disable=no-member
+        data = json.loads(request.body)
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        gender = data.get('gender')
+        description = data.get('description')
+        aspirations = data.get('aspirations')
 
         person = Person(
             first_name=first_name,
             last_name=last_name,
             gender=gender,
             description=description,
-            relationships=relationships,
+            # description=Description(text=description),
             aspirations=aspirations
         )
         person.save()
         return JsonResponse({'status': 'success', 'message': 'Person added successfully'})
 
     return JsonResponse({'status': 'error', 'message': f'Invalid request method, method was {request.method}'})
+
+
+@api_view(['GET'])
+def verify_person(request):
+    """Ran when the verify button is clicked page."""
+    persons = Person.objects.all()
+    data = [{"first_name": person.first_name, "last_name": person.last_name} for person in persons]
+    print(data)
+    return Response(data)

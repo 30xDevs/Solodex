@@ -24,6 +24,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         description: '',
         aspirations: ''
     });
+    const [submitDialogShown, setSubmitDialogShown] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
         const { name, value } = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -37,22 +39,36 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         event.preventDefault();
         console.log(event)
         console.log(formData)
+        setSubmitMessage(formData.first_name + ' ' + formData.last_name)
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/person/', formData, {
+            const response = await axios.post('http://127.0.0.1:8000/add_person/', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
             });
 
             console.log('Form submitted', response.data);
+            setSubmitMessage('Person added successfully');
         } catch (error) {
             console.error("Error submitting form", error);
+            setSubmitMessage('Error submitting form: ' + error);
         }
 
-        setDialogShown(false)
+        setSubmitDialogShown(true);
+        setDialogShown(false);
     }
     
+    const verifyData = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/verify_person/');
+            alert('Data in database:' + JSON.stringify(response.data));
+            console.log('Data in database:', response.data);
+        } catch (error) {
+            alert("error")
+            console.error("Error verifying data", error);
+        }
+    }
 
     // const closeModal = useCallback(() => setModalIsOpen(false), [setModalIsOpen]);
 
@@ -135,11 +151,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </Pane>
         </Dialog>
 
+        <Dialog
+            isShown={submitDialogShown}
+            title="Submission Status"
+            onCloseComplete={() => setSubmitDialogShown(false)}
+            confirmLabel="OK"
+        >
+            <Text>{submitMessage}</Text>
+        </Dialog>
 
         <Button
             style={buttonStyle}
             onClick={() => setDialogShown(true)}
         >+</Button>
+        
+        <Button onClick={verifyData}>Verify Data</Button>
         
     </Pane>
                                                        
