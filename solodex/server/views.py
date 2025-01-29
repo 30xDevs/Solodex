@@ -25,9 +25,19 @@ class PersonSerializer(HyperlinkedModelSerializer):
                   'aspirations']
         
 class PersonViewSet(ModelViewSet):
-    """ Allows to create or destory a person object without configuring anything."""
+    """ Allows to create or destroy a person object without configuring anything."""
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+
+    def list(self, request, *args, **kwargs):
+        """All classes that are derived from ModelViewSet can be equipped with several methods that are called 
+        automatically by the viewset. The list method is called when the viewset is accessed using the GET method."""
+        # Log the GET request
+        persons = Person.objects.all()
+        data = [{"first_name": person.first_name, "last_name": person.last_name} for person in persons]
+        print(data)
+        return super().list(request, *args, **kwargs)
+    
 
 @csrf_exempt
 def add_person(request):
