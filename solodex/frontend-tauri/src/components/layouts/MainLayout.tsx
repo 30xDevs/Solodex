@@ -2,6 +2,7 @@ import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, TextInputField} from 'evergreen-ui'
 import axios from 'axios';
 import AddPersonButton from '../widgets/AddPersonButton';
+import GraphView from '../organisms/GraphView';
 // import './Layout.css'; // Assuming you have a CSS file for styling
 
 interface MainLayoutProps {
@@ -34,7 +35,7 @@ const MainLayout: React.FC = () => {
     <Pane
         display="flex"
         alignItems="center">
-        
+        <GraphView></GraphView>
         <AddPersonButton/>
         <Button onClick={verifyData}>Verify Data</Button>
         

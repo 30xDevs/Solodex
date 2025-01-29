@@ -69,12 +69,19 @@ const AddPersonButton: React.FC = () => {
     return (
         <div>
         <Dialog
+            width={'80%'}
+            sideOffset={5}
+            hasFooter={false}
+            hasHeader={false}
             isShown={dialogShown}
-            title="Internal scrolling"
             onCloseComplete={() => setDialogShown(false)}
         >
             <Pane
-                display="flex"
+                // display="flex"
+                paddingBottom={'20px'}
+                paddingTop={'20px'}
+                paddingLeft={'30px'}
+                paddingRight={'30px'}
                 alignItems="center">
                 <form onSubmit={handleSubmit}>
                     <TextInputField 
