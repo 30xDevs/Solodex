@@ -22,4 +22,7 @@ urlpatterns = [
 
     # endpoint for verifying data insertion
     path('verify_person/', views.verify_person, name='verify_person'),
+
+    #endpoint for LLM parsing of description
+    path('process_description/', views.process_description, name='process_description'),
 ]

@@ -72,3 +72,34 @@ def verify_person(request):
     data = [{"first_name": person.first_name, "last_name": person.last_name} for person in persons]
     print(data)
     return Response(data)
+
+
+@csrf_exempt
+def process_description(request):
+    """Ran when the save button is clicked on AddPersonButton.tsx"""
+
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': f"Invalid request method, method was {request.method}"}, status=400)
+
+    # else
+    data = json.loads(request.body)
+    description = data.get('description', '')
+
+    prompt_engineering = "<---- please take this and write it as semi structured data\
+        ta JSON. Just the description without name. Please just output the json text, nothing else"
+
+    # Send the description to the ollama process
+    try:
+        global ollama_process_object # load in the ollama process object
+        if ollama_process_object:
+            ollama_process_object.stdin.write(description + prompt_engineering)
+            ollama_process_object.stdin.flush()
+            print("Description sent to ollama")
+            response = ollama_process_object.stdout.readline().strip()
+
+            print(response)
+
+            return JsonResponse({})
+
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Failed to process description: {e}'}, status=500)

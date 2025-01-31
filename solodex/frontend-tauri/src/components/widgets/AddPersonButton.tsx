@@ -112,8 +112,24 @@ const AddPersonButton: React.FC = () => {
      * 
      * @param {React.FormEvent} event - the form submission event
      */
-    const handleAdditionalSubmit = (event: React.FormEvent) => {
+    const handleAdditionalSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        
+        try {
+            const response = await axios.post('/api/process_description/', {
+                description: additionalFormData.description,
+            });
+
+
+            const processedDescription = response.data.processed_description;
+            setAdditionalFormData((prev) => ({
+                ...prev,
+                description: processedDescription,
+            }));
+            setAdditionalDialogShown(false);
+        } catch (error) {
+            console.error('Error processing description:', error);
+        }
 
         // Cache the additional data in the form
         setFormData((prev) => ({
@@ -236,7 +252,9 @@ const AddPersonButton: React.FC = () => {
                         value={additionalFormData?.age || ''}
                         onChange={handleAdditionalChange}
                         placeholder='Enter age'/>
-                    <Button type="submit" appearance='primary' intent="success">
+                    <Button type="submit" 
+                    onClick={() => handleSave()} // TODO: Implement handleSave function or similar or remove or handleAdditional Submit
+                    appearance='primary' intent="success">
                         Save
                     </Button>
                 </form>
