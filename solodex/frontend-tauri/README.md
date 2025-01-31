@@ -18,3 +18,12 @@ npm install
 # run development server
 npm run tauri dev
 ```
+
+
+## TODO
+Make a microservice (API) that takes in the Description (raw user text input) and once the user saves the description automatically start using LLM (via API) to generate a JSON that will be semistructured in the Django DB.
+
+Then when the user creates the actual person object, the JSON will (likely) already be made by the LLM, reducing downtime for the user.
+
+
+maybe having voice to text for the description....

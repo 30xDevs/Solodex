@@ -14,8 +14,14 @@ class personalityTraits(models.Model):
 
 
 class Description(models.Model):
+    """One JSON field. Dropdown that constructs a JSON that gets sent to backend
+    
+    
+    Fast to input the information. Use LLM here to generate the JSON"""
+
     id = models.CharField(max_length=10, primary_key=True)
     text = models.TextField()
+    occupation = models.CharField(max_length=100)
     physicalCharacteristics = models.TextField() #TODO: Discuss to detmerine multiple columns
     personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE, null=True, blank=True)
 
