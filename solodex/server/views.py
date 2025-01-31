@@ -20,7 +20,7 @@ def get_csrf_token(request):
 class PersonSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 
+        fields = ['id', 'first_name', 'last_name', 
                   'gender', 'description',
                   'aspirations']
         

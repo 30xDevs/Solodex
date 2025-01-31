@@ -18,27 +18,21 @@ interface FormData {
 }
                                                                        
 const MainLayout: React.FC = () => {
-    
-    const verifyData = async () => {
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/person/');
-            alert('Data in database:' + JSON.stringify(response.data));
-            console.log('Data in database:', response.data);
-        } catch (error) {
-            alert("error")
-            console.error("Error verifying data", error);
-        }
-    }
 
     return (
         
     <Pane
+        height='100vh'
+        width='100vw'
         display="flex"
-        alignItems="center">
-        <GraphView></GraphView>
-        <AddPersonButton/>
-        <Button onClick={verifyData}>Verify Data</Button>
-        
+        flexDirection="column"
+        alignItems="stretch">
+        <Pane>
+            <GraphView/>
+        </Pane>
+        <Pane>
+            <AddPersonButton/>
+        </Pane>   
     </Pane>
                                                        
     );                                                             
