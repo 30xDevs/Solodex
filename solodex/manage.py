@@ -3,7 +3,7 @@
 import os
 import sys
 import subprocess
-
+import global_vars as global_vars
 
 
 def start_ollama(model_choice : str = 'llama3.2') -> None:
@@ -14,16 +14,14 @@ def start_ollama(model_choice : str = 'llama3.2') -> None:
     `model_choice` : `str`
         The model to be used. Default is 'llama3.2'.
     """
-    global ollama_process_object
-
     try:
-        ollama_process_object = subprocess.Popen(['ollama', 'run', model_choice], 
+        global_vars.ollama_process_object = subprocess.Popen(['ollama', 'run', model_choice], 
                                                 stdin=subprocess.PIPE, # creates pipe to the standard input of the process. Allows python to send things to stdin
                                                 stdout=subprocess.PIPE, # creates pipe to the standard output of the process. Allows python to read from stdout
                                                 stderr=subprocess.PIPE, # creates pipe to the standard error of the process. Allows python to read from stderr
                                                 text = True, # allows python to read and write strings (not bytes) to and from the process
                                                 )
-        print(f"Ollama process started with PID: {ollama_process_object.pid}")
+        print(f"Ollama process started with PID: {global_vars.ollama_process_object.pid}")
     except Exception as e:
         print(f"Failed to start ollama process: {e}")
 
@@ -42,6 +40,7 @@ def main():
     
     # Start the ollama process
     start_ollama()
+    print(global_vars.ollama_process_object)
 
     execute_from_command_line(sys.argv)
 
