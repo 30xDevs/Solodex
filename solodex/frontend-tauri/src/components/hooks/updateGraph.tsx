@@ -15,7 +15,7 @@ interface Link {
 export const useGraphNodeState = () => {
     const [nodes, setNodes] = useState<Node[]>([]);
 
-    return { nodes, updateNodes: setNodes};
+    return { nodes, setNodes};
 };
  
 export const useGraphLinkState = () => {

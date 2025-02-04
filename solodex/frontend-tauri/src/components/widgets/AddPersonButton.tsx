@@ -1,9 +1,13 @@
 import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, TextInputField, toaster} from 'evergreen-ui'
 import axios from 'axios';
+import { useGraphNodeState } from '../hooks/updateGraph';
 
-interface AddPersonButtonProps {
-    children: ReactNode;
+interface Node {
+	id: string | number | undefined;
+	name: string | null;
+	x?: number;
+	y?: number;
 }
 
 interface FormData {
@@ -19,6 +23,7 @@ const AddPersonButton: React.FC = () => {
         last_name: '',
         gender: 'na',
     });
+    const { nodes, setNodes } = useGraphNodeState();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
         const { name, value } = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -41,6 +46,15 @@ const AddPersonButton: React.FC = () => {
             console.log('Form submitted', response.data);
             toaster.success(`${formData.first_name} ${formData.last_name} Created`)
             setDialogShown(false);
+
+            // Create a new Node
+            const newNode: Node = {
+                id: response.data.id,
+                name: formData.first_name,
+            }
+
+            // update nodes with the new node
+            setNodes(prev => [...prev, newNode])
         } catch (error) {
             toaster.warning(`User creation failed: ${error}`)
         }

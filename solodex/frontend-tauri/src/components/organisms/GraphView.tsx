@@ -2,35 +2,35 @@ import axios from "axios";
 import { toaster } from "evergreen-ui";
 import React, { useEffect, useState, useRef } from "react";
 import ForceGraph2D from "react-force-graph-2d";
+import { useGraphNodeState } from "../hooks/updateGraph";
 
-interface Node {
+export interface Node {
 	id: string | number | undefined;
 	name: string | null;
 	x?: number;
 	y?: number;
 }
 
-interface Link {
+export interface Link {
 	source: string;
 	target: string;
 }
 
 const GraphView: React.FC = () => {
 	// Node states
-	const [nodes, setNodes] = useState<Node[]>([]);
+	const { nodes, setNodes } = useGraphNodeState();
 	const [links, setLinks] = useState<Link[]>([]);
-	const graphData = { nodes, links };
 
 	const drawNode = (node: Node, ctx: CanvasRenderingContext2D, globalScale: number) => {
 		const label = node.name || '';
-		const fontSize = 12 / globalScale;
+		const fontSize = 12 / (globalScale/2);
 		ctx.font = `${fontSize}px Times New Roman`;
-		const textWidth = ctx.measureText(label).width;
-		const bckgDimensions = [textWidth, fontSize].map(dim => dim + fontSize * 0.2);
+		// const textWidth = ctx.measureText(label).width;
+		// const bckgDimensions = [textWidth, fontSize].map(dim => dim + fontSize * 0.2);
 
 		ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
 
-		ctx.fillRect(node.x! - bckgDimensions[0] / 2, node.y! - bckgDimensions[1] / 2, bckgDimensions[0], bckgDimensions[1]);
+		// ctx.fillRect(node.x! - bckgDimensions[0] / 2, node.y! - bckgDimensions[1] / 2, bckgDimensions[0], bckgDimensions[1]);
 
 		// Set text color                                                             
         ctx.fillStyle = 'black';                                                      
@@ -89,7 +89,7 @@ const GraphView: React.FC = () => {
 	return (
 		<div style={{ width: '800px', height: '600px' }}>
 			<ForceGraph2D
-				graphData={graphData}
+				graphData={{nodes, links}}
 				nodeCanvasObject={drawNode}
 				nodeLabel="name"
 				nodeAutoColorBy="name"
