@@ -12,7 +12,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.handlers.wsgi import WSGIRequest
 import json
-import global_vars as global_vars
+import time
+import global_vars
+
+from ast import literal_eval
 
 # import sys
 # sys.path.append('..')
@@ -83,31 +86,42 @@ def verify_person(request):
 @csrf_exempt
 def process_description(request : WSGIRequest):
     """Ran when the save button is clicked on AddPersonButton.tsx"""
-    print("clicked")
+    # print("clicked")
 
     if request.method != 'POST':
-        return JsonResponse({'status': 'error', 'message': f"Invalid request method, method was {request.method}"}, status=400)
+        return JsonResponse({'status': 'error', 'message': f"Invalid request method, method was {request.method}. Needs to be POST"}, status=400)
 
     # else
-    from ast import literal_eval
-    data : dict = literal_eval(request.body.decode('utf-8'))
+    data : str = literal_eval(request.body.decode('utf-8'))
     print(data)
-    description = data.get('description', '')
+    # description = data.get('description', '')
 
     prompt_engineering = "<---- please take this and write it as semi structured data\
         (i.e.) JSON. Just the description without name. Please just output the json text, nothing else"
 
-    # Send the description to the ollama process
+    # Send the description to the ollama process and obtain output
     try:
         if global_vars.ollama_process_object:
-            global_vars.ollama_process_object.stdin.write(description + prompt_engineering)
-            global_vars.ollama_process_object.stdin.flush()
+
             print("Description sent to ollama")
-            response = global_vars.ollama_process_object.stdout.readline().strip()
+            # Recall that we instantiated the `ollama_process_object` in text mode to avoid sending it text as bytes
+            # FIXME: Something wrong with .communicate??
+            stdout, stderr = global_vars.ollama_process_object.communicate(input = data+ prompt_engineering, timeout=60)
 
-            print(response)
+            print(stdout)
+            print(f"This is the address of the Ollama subprocess object: {id(global_vars.ollama_process_object)}")
 
-            return JsonResponse({'processed_description': response})
+            return JsonResponse({'processed_description': description_dict}, status = 200)
 
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f'Failed to process description: {e}'}, status=500)
+        print(e)
+
+    # Process output
+    try:
+        description_dict : dict = literal_eval(stdout)
+        return JsonResponse({'processed_description': description_dict}, status = 200)
+    except Exception as e:
+        print(e)
+
+    # Base return for failure    
+    return JsonResponse({'status': 'error', 'message': f'Failed to process description: {e}'}, status=500)
