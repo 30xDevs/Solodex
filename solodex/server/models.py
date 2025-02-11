@@ -21,7 +21,7 @@ class Description(models.Model):
 
     id = models.CharField(max_length=10, primary_key=True)
     text = models.TextField()
-    occupation = models.CharField(max_length=100)
+    occupation = models.CharField(max_length=100, default=None, null=True)
     physicalCharacteristics = models.TextField() #TODO: Discuss to detmerine multiple columns
     personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE, null=True, blank=True)
 
