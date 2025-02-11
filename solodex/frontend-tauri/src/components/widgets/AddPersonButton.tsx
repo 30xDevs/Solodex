@@ -106,14 +106,30 @@ const AddPersonButton: React.FC = () => {
     }
 
     /**
-     * handleAdditionalSubmit is a function that sends a POST request to the backend API to create a Description object
+     * handleAdditionalSubmit is an async function that sends a POST request to the backend API to create a Description object
      * that will be places in the DB.
      * It uses the axios library to make the request. It is an asynchronous function that waits for the response.
      * 
      * @param {React.FormEvent} event - the form submission event
      */
-    const handleAdditionalSubmit = (event: React.FormEvent) => {
+    const handleAdditionalSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        // Hit the process_description api endpoint
+
+        try {
+            // Attempt to send a POST request to the backend API
+            const response = await axios.post('http://127.0.0.1:8000/api/process_description/', additionalFormData.description, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            console.log('Form submitted', response.data);
+            toaster.success(`Description Parsed & Created!`)
+        } catch {
+            toaster.notify("Description not created!")
+        }
 
         // Cache the additional data in the form
         setFormData((prev) => ({
@@ -208,8 +224,9 @@ const AddPersonButton: React.FC = () => {
             </Pane>
         </Dialog>
 
+        {/* Dialog for the Additional Information (Description + More) */}
         <Dialog
-            isShown={additionalDialogShown} // This boolean variable governs if the new dialog is shown or not
+            isShown={additionalDialogShown} // This boolean variable governs if the new dialog (for description) is shown or not
             title="Add Additional Information"
             onCloseComplete={() => setAdditionalDialogShown(false)}
         >
