@@ -22,6 +22,7 @@ def start_ollama(model_choice : str = 'llama3.2') -> None:
                                                 text = True, # allows python to read and write strings (not bytes) to and from the process
                                                 )
         print(f"Ollama process started with PID: {global_vars.ollama_process_object.pid}")
+        print(f"Ollama process started with subprocess memory location: {id(global_vars.ollama_process_object)}")
     except Exception as e:
         print(f"Failed to start ollama process: {e}")
 
