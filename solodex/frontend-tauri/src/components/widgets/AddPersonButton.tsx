@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, TextInputField, toaster} from 'evergreen-ui'
 import axios from 'axios';
-import { GraphNode } from 'reagraph';
+import { GraphNode, GraphEdge } from 'reagraph';
 
 interface FormData {
     first_name: string | null;
@@ -9,7 +9,18 @@ interface FormData {
     gender: string | null;
 }
 
-const AddPersonButton: React.FC = () => {
+interface GraphViewProps {
+    // List of nodes to be passed in from
+    // parent state
+    nodes: GraphNode[];
+    setNodes: React.Dispatch<React.SetStateAction<GraphNode[]>>;
+
+    // Do the same for edges
+    edges: GraphEdge[];
+    setEdges: React.Dispatch<React.SetStateAction<GraphEdge[]>>;
+}
+
+const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges}) => {
     const [dialogShown, setDialogShown] = useState(false); 
     const [formData, setFormData] = useState<FormData>({
         first_name: '',
@@ -41,13 +52,18 @@ const AddPersonButton: React.FC = () => {
             setDialogShown(false);
 
             // Create a new Node
-            // const newNode: GraphNode = {
-            //     id: response.data.id,
-            //     label: formData.first_name || undefined,
-            // }
+            const newNode: GraphNode = {
+                id: response.data.id,
+                label: formData.first_name || undefined,
+            }
 
             // update nodes with the new node
-            // setNodes([...nodes, newNode])
+            if (nodes.length == 0) {
+                setNodes([newNode]);
+            } else {
+                setNodes([...nodes, newNode]);
+            }
+            
         } catch (error) {
             toaster.warning(`User creation failed: ${error}`)
         }

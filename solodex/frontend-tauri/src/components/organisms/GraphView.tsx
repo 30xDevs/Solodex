@@ -4,19 +4,31 @@ import React, { useEffect, useState, useRef} from "react";
 import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode } from 'reagraph';
 // import { useGraphContext } from "../../managers/GraphProvider";
 
-export interface Node {
-	id: string | number | undefined;
-	name: string | null;
-	x?: number;
-	y?: number;
+// export interface Node {
+// 	id: string | number | undefined;
+// 	name: string | null;
+// 	x?: number;
+// 	y?: number;
+// }
+
+// export interface Link {
+// 	source: string;
+// 	target: string;
+// }
+
+
+interface GraphViewProps {
+	// List of nodes to be passed in from
+	// parent state
+	nodes: GraphNode[];
+	setNodes: React.Dispatch<React.SetStateAction<GraphNode[]>>;
+
+	// Do the same for edges
+	edges: GraphEdge[];
+	setEdges: React.Dispatch<React.SetStateAction<GraphEdge[]>>;
 }
 
-export interface Link {
-	source: string;
-	target: string;
-}
-
-const GraphView: React.FC = () => {
+const GraphView: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges}) => {
 	// Node states
 	// const context = useGraphContext();
 
@@ -25,8 +37,8 @@ const GraphView: React.FC = () => {
 	// const edges = context?.edges ?? []
 	// const setEdges = context?.edges ?? []
 
-	const [ nodes, setNodes ] = useState<GraphNode[]>([]);
-    const [ edges, setEdges ] = useState<GraphEdge[]>([]);
+	// const [ nodes, setNodes ] = useState<GraphNode[]>([]);
+    // const [ edges, setEdges ] = useState<GraphEdge[]>([]);
 
 	const ref = useRef<GraphCanvasRef | null>(null);
 
