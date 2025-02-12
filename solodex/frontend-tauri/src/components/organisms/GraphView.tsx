@@ -1,8 +1,8 @@
 import axios from "axios";
 import { toaster } from "evergreen-ui";
-import React, { useEffect, useState, useRef } from "react";
-import ForceGraph2D from "react-force-graph-2d";
-import { useGraphNodeState } from "../hooks/updateGraph";
+import React, { useEffect, useState, useRef} from "react";
+import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode } from 'reagraph';
+// import { useGraphContext } from "../../managers/GraphProvider";
 
 export interface Node {
 	id: string | number | undefined;
@@ -18,47 +18,21 @@ export interface Link {
 
 const GraphView: React.FC = () => {
 	// Node states
-	const { nodes, setNodes } = useGraphNodeState();
-	const [links, setLinks] = useState<Link[]>([]);
+	// const context = useGraphContext();
 
-	const drawNode = (node: Node, ctx: CanvasRenderingContext2D, globalScale: number) => {
-		const label = node.name || '';
-		const fontSize = 12 / (globalScale/2);
-		ctx.font = `${fontSize}px Times New Roman`;
-		// const textWidth = ctx.measureText(label).width;
-		// const bckgDimensions = [textWidth, fontSize].map(dim => dim + fontSize * 0.2);
+	// const nodes = context?.nodes ?? []
+	// const setNodes = context?.setNodes ?? []
+	// const edges = context?.edges ?? []
+	// const setEdges = context?.edges ?? []
 
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+	const [ nodes, setNodes ] = useState<GraphNode[]>([]);
+    const [ edges, setEdges ] = useState<GraphEdge[]>([]);
 
-		// ctx.fillRect(node.x! - bckgDimensions[0] / 2, node.y! - bckgDimensions[1] / 2, bckgDimensions[0], bckgDimensions[1]);
+	const ref = useRef<GraphCanvasRef | null>(null);
 
-		// Set text color                                                             
-        ctx.fillStyle = 'black';                                                      
-        ctx.textAlign = 'left';                                                     
-        ctx.textBaseline = 'hanging';                                                  
-        ctx.fillText(label, node.x!, node.y!);                                        
-                                                                                  
-        // Draw a circle                                                              
-        ctx.beginPath();                                                              
-        ctx.arc(node.x!, node.y!, 5, 0, 2 * Math.PI, false);                          
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; // Circle color                           
-        ctx.fill();                                                                   
-        ctx.closePath();
-
-	};
-
-	// Define the graph data as nodes and links                                 
-	const data = {
-		nodes: [
-			{ id: 'node1', name: 'Node 1' },
-			{ id: 'node2', name: 'Node 2' },
-			{ id: 'node3', name: 'Node 3' }
-		],
-		links: [
-			{ source: 'node1', target: 'node2' },
-			{ source: 'node2', target: 'node3' }
-		]
-	};
+	useEffect(() => {
+		ref.current?.fitNodesInView();
+	}, [nodes]);
 
 	useEffect(() => {
 
@@ -69,8 +43,8 @@ const GraphView: React.FC = () => {
 
 				console.log(response.data);
 				
-				const extractedData: Node[] = response.data.map((item: { id: string, first_name: string}) => ({
-													id: item.id, name: item.first_name }));
+				const extractedData: GraphNode[] = response.data.map((item: { id: string, first_name: string}) => ({
+													id: item.id, label: item.first_name }));
 				setNodes(extractedData);
 
 				console.log(nodes[0]
@@ -88,12 +62,19 @@ const GraphView: React.FC = () => {
 
 	return (
 		<div style={{ width: '800px', height: '600px' }}>
-			<ForceGraph2D
+			{/* <ForceGraph2D
 				graphData={{nodes, links}}
 				nodeCanvasObject={drawNode}
 				nodeLabel="name"
 				nodeAutoColorBy="name"
-			/>
+			/> */}
+			<GraphCanvas
+				ref={ref}
+				nodes={nodes}
+				edges={edges}
+			>
+				
+			</GraphCanvas>
 		</div>
 	);
 }
