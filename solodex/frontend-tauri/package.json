@@ -10,19 +10,20 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@atlaskit/css-reset": "^6.11.5",
-    "@atlaskit/form": "^11.0.2",
-    "@atlaskit/textfield": "^6.7.2",
-    "@atlaskit/tokens": "^3.2.0",
-    "@tauri-apps/api": "^2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.4",
+    "@mui/material": "^6.4.4",
+    "@tauri-apps/api": "^2.0.1",
     "@tauri-apps/plugin-opener": "^2",
     "axios": "^1.7.9",
     "evergreen-ui": "^7.1.9",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "reagraph": "^4.21.2"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2",
+    "@tauri-apps/cli": "^2.2.7",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",

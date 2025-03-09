@@ -15,27 +15,16 @@ class personalityTraits(models.Model):
 
 
 class Description(models.Model):
-<<<<<<< HEAD:solodex/myapp/models.py
-    """Schema for the description of a person."""
-=======
     """One JSON field. Dropdown that constructs a JSON that gets sent to backend
     
     
     Fast to input the information. Use LLM here to generate the JSON"""
 
->>>>>>> tauri-exp:solodex/server/models.py
     id = models.CharField(max_length=10, primary_key=True)
     text = models.TextField()
     occupation = models.CharField(max_length=100, default=None, null=True)
     physicalCharacteristics = models.TextField() #TODO: Discuss to detmerine multiple columns
-<<<<<<< HEAD:solodex/myapp/models.py
     personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE, null=True, default=None)
-=======
-    personalityTraits = models.ForeignKey(personalityTraits, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return self.text
->>>>>>> tauri-exp:solodex/server/models.py
 
 class RelationshipType(models.Model):
     """Schema for the type of relationship."""
@@ -62,12 +51,7 @@ class Aspirations(models.Model):
     aspiration_drive = None #TODO: Add AspirationDrive model which is a float/integer that represent how mucha person wants this aspiration
 
 class Person(models.Model):
-<<<<<<< HEAD:solodex/myapp/models.py
-    """Schema for a person."""
-    id = models.CharField(max_length=10, primary_key=True)
-=======
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
->>>>>>> tauri-exp:solodex/server/models.py
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=7, null=True)

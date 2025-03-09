@@ -1,45 +1,39 @@
-import React, {ReactNode, useCallback, useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, TextInputField} from 'evergreen-ui'
-import axios from 'axios';
+import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode } from 'reagraph';
 import AddPersonButton from '../widgets/AddPersonButton';
-// import './Layout.css'; // Assuming you have a CSS file for styling
-
-interface MainLayoutProps {
-    children: ReactNode;
-}
-
-interface FormData {
-    first_name: string | null;
-    last_name: string | null;
-    gender: string | null;
-    description: string | null;
-    aspirations: string | null;
-}
+import GraphView from '../organisms/GraphView';
+import { Container, Grid2 } from '@mui/material';
+import SearchButton from '../widgets/SearchButton';
                                                                        
 const MainLayout: React.FC = () => {
-    
-    const verifyData = async () => {
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/person/');
-            alert('Data in database:' + JSON.stringify(response.data));
-            console.log('Data in database:', response.data);
-        } catch (error) {
-            alert("error")
-            console.error("Error verifying data", error);
-        }
-    }
+
+    // Set up the graph Node and Edge state here so
+    // it can be accessed and changed anywhere.
+    const [ nodes, setNodes ] = useState<GraphNode[]>([]);
+    const [ edges, setEdges ] = useState<GraphEdge[]>([]);
+
 
     return (
-        
-    <Pane
-        display="flex"
-        alignItems="center">
-        
-        <AddPersonButton/>
-        <Button onClick={verifyData}>Verify Data</Button>
-        
-    </Pane>
-                                                       
+    
+        <Container>
+            <GraphView
+                nodes={nodes}
+                setNodes={setNodes}
+                edges={edges}
+                setEdges={setEdges}>
+            </GraphView>
+            <Grid2>
+                <AddPersonButton
+                    nodes={nodes}
+                    setNodes={setNodes}
+                    edges={edges}
+                    setEdges={setEdges}>
+                </AddPersonButton>
+                <SearchButton/>
+            </Grid2>
+            
+        </Container>                                         
     );                                                             
 };                                                                  
                                                               

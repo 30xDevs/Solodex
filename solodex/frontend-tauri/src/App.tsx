@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import MainLayout from "./components/layouts/MainLayout";
+import Box from '@mui/material/Box';
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -15,8 +16,10 @@ function App() {
 
   return (
     <main className="container">
-      <MainLayout>
-      </MainLayout>
+      <Box>
+        <MainLayout>
+        </MainLayout>
+      </Box>
 
       {/* <div className="row">
         <a href="https://vitejs.dev" target="_blank">

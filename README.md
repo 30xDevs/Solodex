@@ -60,3 +60,32 @@ See the [README](./solodex/frontend-tauri/README.md) for the client app.
 
 ## Backend
 See the [README](./solodex/README.md) for the backend, particularly the server application.
+
+## Building
+### Android
+- Set up android dev dependencies
+https://tauri.app/start/prerequisites/#android
+
+```bash
+# Initialize the project for android (this is a pain in the ass)
+
+# If you get an error where the 'tauri' command
+# is not in your path, you need to install it with cargo
+cargo install tauri-cli
+
+
+cargo tauri android init
+
+# Dumps out available emulators
+${ANDROID_HOME}/emulator/emulator -list-avds
+
+# Starts the emulator
+${ANDROID_HOME}/emulator/emulator -avd <ONE OF THE NAMES FROM THE PREVIOUS COMMAND>
+```
+
+- Once dependencies are met, you can...
+```bash
+  npm run tauri android dev
+
+  # This will take a fat minute the first time, but once done, it should install Solodex on the emulator and you can perform testing.
+```
