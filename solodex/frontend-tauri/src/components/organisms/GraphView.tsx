@@ -3,19 +3,6 @@ import axios from "axios";
 import { toaster } from "evergreen-ui";
 import React, { useEffect, useState, useRef} from "react";
 import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode } from 'reagraph';
-// import { useGraphContext } from "../../managers/GraphProvider";
-
-// export interface Node {
-// 	id: string | number | undefined;
-// 	name: string | null;
-// 	x?: number;
-// 	y?: number;
-// }
-
-// export interface Link {
-// 	source: string;
-// 	target: string;
-// }
 
 
 interface GraphViewProps {
@@ -43,10 +30,13 @@ const GraphView: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges})
 
 	const ref = useRef<GraphCanvasRef | null>(null);
 
+	// This useEffect hook is used to update the nodes in the GUI
 	useEffect(() => {
-		ref.current?.fitNodesInView();
+		ref.current?.fitNodesInView(nodes.map(obj => obj.id));
 	}, [nodes]);
 
+	// This useEffect hook is used to update the nodes in
+	// application startup. (This is because the optional dependency array is empty)
 	useEffect(() => {
 
 		// Fetch people

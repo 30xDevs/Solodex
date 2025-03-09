@@ -9,9 +9,8 @@ import { GraphNode, GraphEdge } from 'reagraph';
 import { Card } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
+const SERVER_HOST = import.meta.env.VITE_SERVER_HOST
 
-
-// 
 interface FormData {
     first_name: string | null;
     last_name: string | null;
@@ -34,9 +33,14 @@ interface GraphViewProps {
 /**
  * Button to add a person to the backend database.
  * Provides a form for entering person information
- * and description
+ * and information
  * 
- * 
+ * @component
+ * @param {GraphNode[]} nodes - The state of nodes
+ * @param {React.Dispatch<React.SetStateAction<GraphNode[]>>} setNodes - the setter for `nodes`
+ * @param  {GraphEdge[]} edges - The state of edges
+ * @param {React.Dispatch<React.SetStateAction<GraphEdge[]>>} setEdges - the setter for `edges`
+ * @returns {React.FC<GraphViewProps>} The rendered component
  */
 const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges}) => {
     const [dialogShown, setDialogShown] = useState(false);
@@ -51,9 +55,6 @@ const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setE
         information: ''
     });
     
-
-
-
 
     /**
      * handleChange is a function that updates the state variable formData, caching the user input in the form.
@@ -81,34 +82,30 @@ const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setE
 
         try {
             // Attempt to send a POST request to the backend API
-            const response = await axios.post('http://127.0.0.1:8000/api/person/', formData, {
+            const response = await axios.post(`${SERVER_HOST}/api/person/`, formData, {
                 headers: {
                     'Content-Type': 'application/json'
-            },
-            }
-        );
+                }
+            });
 
             console.log('Form submitted', response.data);
-            toaster.success(`${formData.first_name} ${formData.last_name} Created`)
+            toaster.success(`${formData.first_name} ${formData.last_name} Created`);
             setDialogShown(false);
 
             // Create a new Node from the submitted data
             const newNode: GraphNode = {
                 id: response.data.id,
                 label: formData.first_name || undefined,
-            }
+            };
 
-            // update nodes with the new node
-            if (nodes.length == 0) {
-                setNodes([newNode]);
-            } else {
-                setNodes([...nodes, newNode]);
-            }
+
+            // Update nodes with the new node.
+            setNodes([...nodes, newNode]);
             
         } catch (error) {
             toaster.warning(`User creation failed: ${error}`)
-        }
-    }
+        };
+    };
 
     return (
         <Box>
@@ -194,6 +191,6 @@ const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setE
             </Button>
         </Box>
     )
-}
+};
 
 export default AddPersonButton;
