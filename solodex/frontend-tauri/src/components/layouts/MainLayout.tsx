@@ -3,6 +3,8 @@ import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, Text
 import { GraphCanvas, GraphCanvasRef, GraphEdge, GraphNode } from 'reagraph';
 import AddPersonButton from '../widgets/AddPersonButton';
 import GraphView from '../organisms/GraphView';
+import { Container, Grid2 } from '@mui/material';
+import SearchButton from '../widgets/SearchButton';
                                                                        
 const MainLayout: React.FC = () => {
 
@@ -14,42 +16,24 @@ const MainLayout: React.FC = () => {
 
     return (
     
-    // <GraphProvider>
-    //     <Pane
-    //     height='100vh'
-    //     width='100vw'
-    //     display="flex"
-    //     flexDirection="column"
-    //     alignItems="stretch">
-    //         <Pane>
-    //             <GraphView/>
-    //             <AddPersonButton/>
-    //         </Pane>
-    //     </Pane>
-    // </GraphProvider>
-    
-    <Pane
-        height='100vh'
-        width='100vw'
-        display="flex"
-        flexDirection="column"
-        alignItems="stretch">
-        <Pane>
+        <Container>
             <GraphView
                 nodes={nodes}
                 setNodes={setNodes}
                 edges={edges}
                 setEdges={setEdges}>
             </GraphView>
-            <AddPersonButton
-                nodes={nodes}
-                setNodes={setNodes}
-                edges={edges}
-                setEdges={setEdges}>
-            </AddPersonButton>
-        </Pane>
-    </Pane>
-                                                       
+            <Grid2>
+                <AddPersonButton
+                    nodes={nodes}
+                    setNodes={setNodes}
+                    edges={edges}
+                    setEdges={setEdges}>
+                </AddPersonButton>
+                <SearchButton/>
+            </Grid2>
+            
+        </Container>                                         
     );                                                             
 };                                                                  
                                                               

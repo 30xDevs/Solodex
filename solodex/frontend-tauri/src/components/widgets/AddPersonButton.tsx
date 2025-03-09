@@ -1,7 +1,13 @@
-import React, {ReactNode, useCallback, useEffect, useState} from 'react';
-import { Button, Dialog, Pane, SelectField, Text, TextareaField, TextInput, TextInputField, toaster} from 'evergreen-ui'
+import React, { useState } from 'react';
+import { SelectField, TextInputField, toaster } from 'evergreen-ui'
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import axios from 'axios';
 import { GraphNode, GraphEdge } from 'reagraph';
+import { Card } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 interface FormData {
     first_name: string | null;
@@ -21,7 +27,10 @@ interface GraphViewProps {
 }
 
 const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges}) => {
-    const [dialogShown, setDialogShown] = useState(false); 
+    const [dialogShown, setDialogShown] = useState(false);
+    const handleOpen = () => setDialogShown(true);
+    const handleClose = () => setDialogShown(false);
+
     const [formData, setFormData] = useState<FormData>({
         first_name: '',
         last_name: '',
@@ -69,84 +78,81 @@ const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setE
         }
     }
 
-    const buttonStyle: React.CSSProperties = {
-        position: 'absolute',
-        bottom: '5%',
-        right: '5%',
-        marginBottom: '5px',
-        width: '50px',
-        height: '50px',
-        backgroundColor: 'rgb(0, 0, 0)',
-        color: 'white',
-        border: 'none',
-        borderRadius: '50%',
-        fontSize: '24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        transition: 'background-color 0.3s',
-    };
-
     return (
-        <div>
-        <Dialog
-            width={'80%'}
-            sideOffset={5}
-            hasFooter={false}
-            hasHeader={false}
-            isShown={dialogShown}
-            onCloseComplete={() => setDialogShown(false)}
-        >
-            <Pane
-                // display="flex"
-                paddingBottom={'20px'}
-                paddingTop={'20px'}
-                paddingLeft={'30px'}
-                paddingRight={'30px'}
-                alignItems="center">
-                <form onSubmit={handleSubmit}>
-                    <TextInputField 
-                        label="First Name"
-                        name="first_name"
-                        value={formData?.first_name || ''}
-                        onChange={handleChange}
-                        placeholder='John'/>
-                    <TextInputField 
-                        label="Last Name"
-                        name="last_name"
-                        value={formData?.last_name || ''}
-                        onChange={handleChange}
-                        placeholder='Doe'/>
-                    <SelectField 
-                        label="Gender"
-                        name="gender"
-                        value={formData?.gender || 'na'}
-                        onChange={handleChange}>
-                        <option value="male">
-                            Male
-                        </option>
-                        <option value="female">
-                            Female
-                        </option>
-                        <option value="na" selected>
-                            N/A
-                        </option>
-                    </SelectField>
-                    <Button type="submit" appearance='primary' intent="success">
-                        Create
-                    </Button>
-                </form>
-            </Pane>
-        </Dialog>
+        <Box>
+            <Modal
+                open={dialogShown}
+                onClose={handleClose}>
+                <Card 
+                    sx={{
+                        margin: '20px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                <Container
+                    sx={{
+                        padding: '15px'
+                    }}>
+                    <form onSubmit={handleSubmit}>
+                        <TextInputField 
+                            label="First Name"
+                            name="first_name"
+                            value={formData?.first_name || ''}
+                            onChange={handleChange}
+                            placeholder='John'/>
+                        <TextInputField 
+                            label="Last Name"
+                            name="last_name"
+                            value={formData?.last_name || ''}
+                            onChange={handleChange}
+                            placeholder='Doe'/>
+                        <SelectField 
+                            label="Gender"
+                            name="gender"
+                            value={formData?.gender || 'na'}
+                            onChange={handleChange}>
+                            <option value="male">
+                                Male
+                            </option>
+                            <option value="female">
+                                Female
+                            </option>
+                            <option value="na" selected>
+                                N/A
+                            </option>
+                        </SelectField>
+                        <Button 
+                            type="submit" 
+                            variant='contained' 
+                            color='primary'>
+                            Create
+                        </Button>
+                    </form>
+                </Container>
+                </Card>
+                
+                
+            </Modal>
 
-        <Button
-            style={buttonStyle}
-            onClick={() => setDialogShown(true)}>
-        +
-        </Button>
-        </div>
+            <Button
+                // style={buttonStyle}
+                variant="contained"
+                color="primary"
+                onClick={handleOpen}
+                sx={{
+                    position: 'fixed',
+                    bottom: '25px',
+                    right: '25px',
+                    margin: '5px',
+                    width: '50px',
+                    minWidth: '0',
+                    height: '45px',
+                    // borderRadius: '50%'
+                }}>
+                <AddIcon></AddIcon>
+            </Button>
+        </Box>
     )
 
 }

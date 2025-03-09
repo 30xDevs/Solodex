@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import axios from "axios";
 import { toaster } from "evergreen-ui";
 import React, { useEffect, useState, useRef} from "react";
@@ -73,21 +74,14 @@ const GraphView: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges})
     }, [])
 
 	return (
-		<div style={{ width: '800px', height: '600px' }}>
-			{/* <ForceGraph2D
-				graphData={{nodes, links}}
-				nodeCanvasObject={drawNode}
-				nodeLabel="name"
-				nodeAutoColorBy="name"
-			/> */}
+		<Box>
 			<GraphCanvas
 				ref={ref}
 				nodes={nodes}
-				edges={edges}
-			>
-				
+				edges={edges}>
 			</GraphCanvas>
-		</div>
+		</Box>
+		
 	);
 }
 
