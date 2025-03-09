@@ -13,7 +13,10 @@ from rest_framework.response import Response
 from django.core.handlers.wsgi import WSGIRequest
 import json
 import time
-import global_vars
+import re
+
+from ollama import chat
+from ollama import ChatResponse
 
 from ast import literal_eval
 
@@ -46,6 +49,81 @@ class PersonViewSet(ModelViewSet):
         data = [{"first_name": person.first_name, "last_name": person.last_name} for person in persons]
         print(data)
         return super().list(request, *args, **kwargs)
+    
+    async def create(self, request : WSGIRequest, *args, **kwargs):
+        """Ran when the save button is clicked on AddPersonButton.tsx
+        
+        Parameters
+        -----------
+        request : `WSGIRequest` """
+
+        # recall that `request` has the fields defined in "AddPersonButton.tsx"
+        # data : dict = literal_eval(request.body.decode('utf-8'))
+
+        Person.objects.create(
+            first_name = request.body.first_name,
+            last_name = request.body.last_name,
+            gender = request.body.gender,
+            information = await _process_information(request.body.information)
+        )
+        return JsonResponse({'message': f'Person {request.body.first_name} {request.body.last_name}'}, status = 200)
+
+
+
+async def _process_information(information_raw : str) -> str:
+
+    if information_raw == '':
+        return information_raw
+    
+    prompt_engineering = "<---- Take this and write it as semi structured data\
+        (JSON). Output the json text, nothing else"
+
+    response : ChatResponse = chat(model='llama3.2', messages=[
+    {
+        'role': 'user',
+        'content': information_raw + prompt_engineering,
+    },
+    ])
+
+    # Access fields directly from the response object
+    raw_llm_output : str = response.message.content
+
+    return extract_json_from_string(raw_llm_output)
+
+
+
+def extract_json_from_string(large_string) -> dict | None:
+    """Extract JSON from raw strings.
+    
+    For use in LLM responses.
+    
+    Parameters
+    -----------
+    large_string : `str` 
+        Raw output
+        
+    Returns
+    ---------
+    json_dict : `dict`
+        Dictionary with the information compiled into
+        JSON format
+    """
+    # Regular expression to find JSON substring
+    json_pattern = re.compile(r'\{.*?\}')
+    match = json_pattern.search(large_string)
+    
+    if match:
+        json_string = match.group()
+        try:
+            # Convert JSON string to dictionary
+            json_dict = json.loads(json_string)
+            return json_dict
+        except json.JSONDecodeError as e:
+            print(f"Failed to decode JSON: {e}")
+            return None
+    else:
+        print("No JSON substring found")
+        return None
     
 
 @csrf_exempt
@@ -83,45 +161,3 @@ def verify_person(request):
     return Response(data)
 
 
-@csrf_exempt
-def process_description(request : WSGIRequest):
-    """Ran when the save button is clicked on AddPersonButton.tsx"""
-    # print("clicked")
-
-    if request.method != 'POST':
-        return JsonResponse({'status': 'error', 'message': f"Invalid request method, method was {request.method}. Needs to be POST"}, status=400)
-
-    # else
-    data : str = literal_eval(request.body.decode('utf-8'))
-    print(data)
-    # description = data.get('description', '')
-
-    prompt_engineering = "<---- please take this and write it as semi structured data\
-        (i.e.) JSON. Just the description without name. Please just output the json text, nothing else"
-
-    # Send the description to the ollama process and obtain output
-    try:
-        if global_vars.ollama_process_object:
-
-            print("Description sent to ollama")
-            # Recall that we instantiated the `ollama_process_object` in text mode to avoid sending it text as bytes
-            # FIXME: Something wrong with .communicate??
-            stdout, stderr = global_vars.ollama_process_object.communicate(input = data+ prompt_engineering, timeout=60)
-
-            print(stdout)
-            print(f"This is the address of the Ollama subprocess object: {id(global_vars.ollama_process_object)}")
-
-            return JsonResponse({'processed_description': description_dict}, status = 200)
-
-    except Exception as e:
-        print(e)
-
-    # Process output
-    try:
-        description_dict : dict = literal_eval(stdout)
-        return JsonResponse({'processed_description': description_dict}, status = 200)
-    except Exception as e:
-        print(e)
-
-    # Base return for failure    
-    return JsonResponse({'status': 'error', 'message': f'Failed to process description: {e}'}, status=500)
