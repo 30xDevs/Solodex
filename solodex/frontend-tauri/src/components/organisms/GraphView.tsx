@@ -42,7 +42,7 @@ const GraphView: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setEdges})
 		// Fetch people
 		const fetchData = async () => {
 			try {
-				const response = await axios.get('http://127.0.0.1:8000/api/person/');
+				const response = await axios.get(`${import.meta.env.VITE_SERVER_HOST}/api/person/`);
 
 				console.log(response.data);
 				
