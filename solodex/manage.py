@@ -40,8 +40,8 @@ def main():
         ) from exc
     
     # Start the ollama process
-    start_ollama()
-    print(global_vars.ollama_process_object)
+    # start_ollama()
+    # print(global_vars.ollama_process_object)
 
     execute_from_command_line(sys.argv)
 
