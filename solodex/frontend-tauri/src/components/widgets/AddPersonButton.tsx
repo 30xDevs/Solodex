@@ -9,8 +9,6 @@ import { GraphNode, GraphEdge } from 'reagraph';
 import { Card } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-const SERVER_HOST = import.meta.env.VITE_SERVER_HOST
-
 interface FormData {
     first_name: string | null;
     last_name: string | null;
@@ -82,7 +80,7 @@ const AddPersonButton: React.FC<GraphViewProps> = ({nodes, setNodes, edges, setE
 
         try {
             // Attempt to send a POST request to the backend API
-            const response = await axios.post(`${SERVER_HOST}/api/person/`, formData, {
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_HOST}/api/person/`, formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
