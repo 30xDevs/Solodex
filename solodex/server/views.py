@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Person, Description, Relationships, Aspirations
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from .models import Person
+from django.views.decorators.csrf import csrf_exempt
 
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
@@ -12,17 +11,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.handlers.wsgi import WSGIRequest
 import json
-import time
 import re
 
 from ollama import chat
 from ollama import ChatResponse
-
 from ast import literal_eval
 
-# import sys
-# sys.path.append('..')
-# from ..manage import ollama_process_object
 
 def get_csrf_token(request):
     csrf_token = get_token(request)  # Generates or retrieves the CSRF token
@@ -33,8 +27,8 @@ class PersonSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Person
         fields = ['id', 'first_name', 'last_name', 
-                  'gender', 'description',
-                  'aspirations']
+                  'gender', 'information']
+                  
         
 class PersonViewSet(ModelViewSet):
     """ Allows to create or destroy a person object without configuring anything."""
@@ -50,7 +44,7 @@ class PersonViewSet(ModelViewSet):
         print(data)
         return super().list(request, *args, **kwargs)
     
-    async def create(self, request : WSGIRequest, *args, **kwargs):
+    async def acreate(self, request : WSGIRequest, *args, **kwargs):
         """Ran when the save button is clicked on AddPersonButton.tsx
         
         Parameters
@@ -60,13 +54,23 @@ class PersonViewSet(ModelViewSet):
         # recall that `request` has the fields defined in "AddPersonButton.tsx"
         # data : dict = literal_eval(request.body.decode('utf-8'))
 
-        Person.objects.create(
-            first_name = request.body.first_name,
-            last_name = request.body.last_name,
-            gender = request.body.gender,
-            information = await _process_information(request.body.information)
+
+        # Person.objects.acreate(first_name = request.body.first_name,
+        #     last_name = request.body.last_name,
+        #     gender = request.body.gender,
+        #     information =  _process_information(request.body.information)
+        #     )
+        
+
+        Person.objects.acreate(
+            first_name = request.data.get('first_name'),
+            last_name = request.data.get('last_name'),
+            gender = request.data.get('gender'),
+            information = await _process_information(request.data.get('information'))
         )
-        return JsonResponse({'message': f'Person {request.body.first_name} {request.body.last_name}'}, status = 200)
+
+        # return JsonResponse({'message': f'Person {request.body.first_name} {request.body.last_name}'}, status = 200)
+        return JsonResponse({'message': f'Person {request.data.get("first_name")} {request.data.get("last_name")}'}, status = 200)
 
 
 
@@ -88,11 +92,12 @@ async def _process_information(information_raw : str) -> str:
     # Access fields directly from the response object
     raw_llm_output : str = response.message.content
 
-    return extract_json_from_string(raw_llm_output)
+    ans = await extract_json_from_string(raw_llm_output)
+    return ans
 
 
 
-def extract_json_from_string(large_string) -> dict | None:
+async def extract_json_from_string(large_string) -> dict | None:
     """Extract JSON from raw strings.
     
     For use in LLM responses.

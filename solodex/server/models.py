@@ -55,14 +55,14 @@ class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=7, null=True)
-    description = models.ForeignKey(Description, on_delete=models.CASCADE, null=True)
+    information = models.JSONField(default=None, null=True)
     relationships = models.ForeignKey(Relationships, on_delete=models.CASCADE, null=True)
     # age = models.IntegerField()
     # email = models.EmailField()
     # phone = models.CharField(max_length=15)
     # address = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
-    aspirations = models.ForeignKey(Aspirations, on_delete=models.CASCADE, null=True)
+    # aspirations = models.ForeignKey(Aspirations, on_delete=models.CASCADE, null=True)
 
 
     def __str__(self):
